@@ -1,3 +1,50 @@
+// Función para cambiar entre modo claro y oscuro
+function toggleTheme() {
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+
+    if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+    }
+}
+
+// Aplicar el tema guardado o detectar el tema del sistema
+function applyTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const theme = savedTheme || systemTheme;
+
+    const html = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+
+    if (theme === 'dark') {
+        html.classList.add('dark');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+    } else {
+        html.classList.remove('dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+}
+
+// Inicializar el tema al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme();
+    openTab('encrypt');
+});
+
+// Asignar el evento al botón de cambio de tema
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
 function openTab(tabName) {
     // Oculta todos los contenidos de las pestañas
     document.querySelectorAll('.tab-content').forEach(tab => {
@@ -17,11 +64,6 @@ function openTab(tabName) {
     document.querySelector(`button[onclick="openTab('${tabName}')"]`).classList.add('bg-blue-500', 'text-white');
     document.querySelector(`button[onclick="openTab('${tabName}')"]`).classList.remove('text-gray-700', 'hover:bg-gray-50');
 }
-
-// Inicializa la primera pestaña como activa
-document.addEventListener('DOMContentLoaded', () => {
-    openTab('encrypt');
-});
 
 function encryptFile() {
     const fileInput = document.getElementById('encrypt-file');
